@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shoppinglist.R
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
     private lateinit var viewModel: MainViewModel
@@ -16,11 +17,18 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setupRecyclerView()
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
-        viewModel.shopList.observe(this){
+        viewModel.shopList.observe(this) {
             shopListAdapter.submitList(it)
-            }
         }
-    private fun setupRecyclerView(){
+        val buttonAddItem = findViewById<FloatingActionButton>(R.id.button_add_shop_item)
+        buttonAddItem.setOnClickListener {
+            Log.d("ShopItemActivity1", it.toString())
+            val intent = ShopItemActivity.newIntentAddItem(this)
+            startActivity(intent)
+        }
+    }
+
+    private fun setupRecyclerView() {
         val rvShopList = findViewById<RecyclerView>(R.id.rv_shop_list)
         shopListAdapter = ShopListAdapter()
         rvShopList.adapter = shopListAdapter
@@ -61,7 +69,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupShortClickLitener() {
         shopListAdapter.onShopItemShortClickListen = {
-            Log.d("MainActivity", it.toString())
+            Log.d("ShopItemActivity1", it.toString())
+            val intent = ShopItemActivity.newIntentEditItem(this, it.id)
+            startActivity(intent)
+
         }
     }
 
